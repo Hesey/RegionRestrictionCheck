@@ -472,12 +472,6 @@ delay() {
     return 0
 }
 
-count_run_times() {
-    local tmpresult=$(curl ${CURL_OPTS} -s "https://polished-wildflower-aa1f.colorroom.workers.dev/")
-    TODAY_RUN_TIMES=$(echo "$tmpresult" | sed -n 's/.*"dailyCount":\([0-9]*\).*/\1/p')
-    TOTAL_RUN_TIMES=$(echo "$tmpresult" | sed -n 's/.*"totalCount":\([0-9]*\).*/\1/p')
-}
-
 download_extra_data() {
     MEDIA_COOKIE=$(curl ${CURL_OPTS} -s "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/cookies")
     IATACODE=$(curl ${CURL_OPTS} -s "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/IATACode.txt")
@@ -5976,42 +5970,10 @@ function runScript() {
 }
 
 function showGoodbye() {
-    case "$NUM" in
-        1) ADN='TW' ;;
-        3) ADN='JP' ;;
-        4) ADN='US' ;;
-        8) ADN="KR" ;;
-        *) ADN="$(echo $(($RANDOM % 2 + 1)))" ;;
-    esac
-
     if [ "$LANGUAGE" == 'en' ]; then
         echo -e "${Font_Green}Testing Done! Thanks for Using This Script!${Font_Suffix}"
-        echo -e ''
-        echo -e "${Font_Yellow}Number of Script Runs for Today: ${TODAY_RUN_TIMES}; Total Number of Script Runs: ${TOTAL_RUN_TIMES}${Font_Suffix}"
-        echo -e ''
-        bash <(curl ${CURL_DEFAULT_OPTS} -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/ADEN)
-    elif [[ "$REGION_ID" == "8" ]]; then
-        echo -e "${Font_Green}本次测试已结束，感谢使用此脚本${Font_Suffix}"
-        echo -e ''
-        echo -e "${Font_Yellow}检测脚本当天运行次数: ${TODAY_RUN_TIMES}; 共计运行次数: ${TOTAL_RUN_TIMES}${Font_Suffix}"
-        echo -e ''
-        bash <(curl ${CURL_DEFAULT_OPTS} -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/ADKR)
-        echo -e ''
-    elif [[ "$REGION_ID" == "3" ]]; then
-        echo -e "${Font_Green}本次测试已结束，感谢使用此脚本${Font_Suffix}"
-        echo -e ''
-        echo -e "${Font_Yellow}检测脚本当天运行次数: ${TODAY_RUN_TIMES}; 共计运行次数: ${TOTAL_RUN_TIMES}${Font_Suffix}"
-        echo -e ''
-        bash <(curl ${CURL_DEFAULT_OPTS} -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/ADJP)
-        echo -e ''
     else
         echo -e "${Font_Green}本次测试已结束，感谢使用此脚本${Font_Suffix}"
-        echo -e ''
-        echo -e "${Font_Yellow}检测脚本当天运行次数: ${TODAY_RUN_TIMES}; 共计运行次数: ${TOTAL_RUN_TIMES}${Font_Suffix}"
-        echo -e ''
-        bash <(curl ${CURL_DEFAULT_OPTS} -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/AD1)
-        echo -e ''
-        bash <(curl ${CURL_DEFAULT_OPTS} -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/AD2)
     fi
 }
 
@@ -6022,10 +5984,6 @@ check_os_type
 check_dependencies
 
 process "$@"
-
-clear
-
-count_run_times
 
 showSupportOS
 
