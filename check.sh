@@ -5061,7 +5061,6 @@ function Global_UnlockTest() {
     echo_result ${result} ${array}
     show_region Forum
     WebTest_Reddit
-    show_region Game
     echo "======================================="
 }
 
@@ -5314,17 +5313,6 @@ function JP_UnlockTest() {
     )
     wait
     local array=("VideoMarket:" "D Anime Store:" "FOD(Fuji TV):" "Radiko:" "Karaoke@DAM:" "J:com On Demand:" "WATCHA:" "Rakuten TV JP:")
-    echo_result ${result} ${array}
-    show_region Game
-    local result=$(
-        GameTest_Kancolle &
-        GameTest_UMAJP &
-        GameTest_KonosubaFD &
-        GameTest_PCRJP &
-        GameTest_ProjectSekai &
-    )
-    wait
-    local array=("Kancolle Japan:" "Pretty Derby Japan:" "Konosuba Fantastic Days:" "Princess Connect Re:Dive Japan:" "Project Sekai: Colorful Stage:")
     echo_result ${result} ${array}
     show_region Music
     local result=$(
