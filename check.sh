@@ -3581,7 +3581,11 @@ function MediaUnlockTest_Spotify() {
         echo -n -e "\r Spotify Registration:\t\t\t${Font_Red}Failed (Error: PAGE ERROR)${Font_Suffix}\n"
         return
     fi
-    if [ "$statusCode" == '320' ] || [ "$statusCode" == '120' ]; then
+    if [ "$statusCode" == '320' ]; then
+        echo -n -e "\r Spotify Registration:\t\t\t${Font_Red}No (Proxy Detected)${Font_Suffix}\n"
+        return
+    fi
+    if [ "$statusCode" == '120' ]; then
         echo -n -e "\r Spotify Registration:\t\t\t${Font_Red}No${Font_Suffix}\n"
         return
     fi
