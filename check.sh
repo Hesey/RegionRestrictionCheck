@@ -1783,10 +1783,7 @@ function RegionTest_YouTubeCDN() {
             if [ -n "$geoRegion" ]; then
                 exitLocation="${geoRegion} [${geoCountry}]"
             fi
-            if [ -n "$geoCity" ] && [ "$geoCity" != "$geoRegion" ]; then
-                exitLocation="${geoCity}, ${exitLocation}"
-            fi
-            echo -n -e "\r YouTube CDN:\t\t\t\t${Font_Yellow}[${cdnNode}] (Exit IP: ${exitLocation})${Font_Suffix}\n"
+            echo -n -e "\r YouTube CDN:\t\t\t\t${Font_Yellow}${exitLocation}${Font_Suffix}\n"
         else
             echo -n -e "\r YouTube CDN:\t\t\t\t${Font_Yellow}[${cdnNode}] (Location Unknown)${Font_Suffix}\n"
         fi
