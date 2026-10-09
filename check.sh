@@ -1753,7 +1753,10 @@ function RegionTest_YouTubeCDN() {
         return
     fi
 
-    local iata=$(echo "$tmpresult" | grep '=>' | awk "NR==1" | awk '{print $3}' | cut -f2 -d'-' | cut -c 1-3 | tr a-z A-Z)
+    local mapping=$(echo "$tmpresult" | grep '=>' | awk 'NR==1')
+    local exitIP=$(echo "$mapping" | awk '{print $1}')
+    local cdnNode=$(echo "$mapping" | awk '{print $3}')
+    local iata=$(echo "$cdnNode" | cut -f2 -d'-' | cut -c 1-3 | tr a-z A-Z)
     local isIDC=$(echo "$tmpresult" | grep 'router')
     local isIataFound1=$(echo "$IATACODE" | grep -w "$iata")
     local isIataFound2=$(echo "$IATACODE2" | grep -w "$iata")
@@ -1763,7 +1766,30 @@ function RegionTest_YouTubeCDN() {
         return
     fi
     if [ -z "$isIataFound1" ] && [ -z "$isIataFound2" ]; then
-        echo -n -e "\r YouTube CDN:\t\t\t\t${Font_Red}Failed (Error: IATA: ${iata} Not Found)${Font_Suffix}\n"
+        local geoResult=$(curl ${CURL_DEFAULT_OPTS} -sL --max-time 5 "https://ipinfo.io/${exitIP}/json")
+        local geoCountry=$(echo "$geoResult" | jq -r '.country // empty' 2>/dev/null)
+        local geoRegion=$(echo "$geoResult" | jq -r '.region // empty' 2>/dev/null)
+        local geoCity=$(echo "$geoResult" | jq -r '.city // empty' 2>/dev/null)
+        if [ -z "$geoCountry" ]; then
+            geoResult=$(curl ${CURL_DEFAULT_OPTS} -sL --max-time 5 "http://ip-api.com/json/${exitIP}?fields=status,country,countryCode,regionName,city")
+            if [ "$(echo "$geoResult" | jq -r '.status // empty' 2>/dev/null)" == 'success' ]; then
+                geoCountry=$(echo "$geoResult" | jq -r '.countryCode // empty' 2>/dev/null)
+                geoRegion=$(echo "$geoResult" | jq -r '.regionName // empty' 2>/dev/null)
+                geoCity=$(echo "$geoResult" | jq -r '.city // empty' 2>/dev/null)
+            fi
+        fi
+        if [ -n "$geoCountry" ]; then
+            local exitLocation="${geoCountry}"
+            if [ -n "$geoRegion" ]; then
+                exitLocation="${geoRegion} [${geoCountry}]"
+            fi
+            if [ -n "$geoCity" ] && [ "$geoCity" != "$geoRegion" ]; then
+                exitLocation="${geoCity}, ${exitLocation}"
+            fi
+            echo -n -e "\r YouTube CDN:\t\t\t\t${Font_Yellow}[${cdnNode}] (Exit IP: ${exitLocation})${Font_Suffix}\n"
+        else
+            echo -n -e "\r YouTube CDN:\t\t\t\t${Font_Yellow}[${cdnNode}] (Location Unknown)${Font_Suffix}\n"
+        fi
         return
     fi
     if [ -n "$isIataFound1" ]; then
