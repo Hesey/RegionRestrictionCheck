@@ -5015,18 +5015,16 @@ function Global_UnlockTest() {
     echo ""
     echo "============[ Multination ]============"
     local result=$(
-        MediaUnlockTest_Dazn &
         MediaUnlockTest_DisneyPlus &
         MediaUnlockTest_Netflix &
         MediaUnlockTest_YouTube_Premium &
         MediaUnlockTest_PrimeVideo &
         MediaUnlockTest_TVBAnywhere &
         MediaUnlockTest_Spotify &
-        RegionTest_oneTrust &
         RegionTest_iQYI &
     )
     wait
-    local array=("Dazn:" "Disney+:" "Netflix:" "YouTube Premium:" "Amazon Prime Video:" "TVBAnywhere+:" "Spotify Registration:" "OneTrust Region:" "iQyi Oversea Region:")
+    local array=("Disney+:" "Netflix:" "YouTube Premium:" "Amazon Prime Video:" "TVBAnywhere+:" "Spotify Registration:" "iQyi Oversea Region:")
     echo_result ${result} ${array}
     local result=$(
         RegionTest_Bing &
@@ -5047,7 +5045,6 @@ function Global_UnlockTest() {
     show_region Forum
     WebTest_Reddit
     show_region Game
-    GameTest_SDGGGE
     echo "======================================="
 }
 
@@ -5457,7 +5454,6 @@ function SEA_UnlockTest() {
 function Sport_UnlockTest() {
     echo "===============[ Sport ]==============="
     local result=$(
-        MediaUnlockTest_Dazn &
         MediaUnlockTest_ESPNPlus &
         MediaUnlockTest_NBATV &
         MediaUnlockTest_FuboTV &
@@ -5468,7 +5464,7 @@ function Sport_UnlockTest() {
         MediaUnlockTest_EurosportRO &
     )
     wait
-    local array=("Dazn:" "Star+:" "ESPN+:" "NBA TV:" "Fubo TV:" "Mola TV:" "Setanta Sports:" "Optus Sports:" "Bein Sports Connect:" "Eurosport RO:")
+    local array=("Star+:" "ESPN+:" "NBA TV:" "Fubo TV:" "Mola TV:" "Setanta Sports:" "Optus Sports:" "Bein Sports Connect:" "Eurosport RO:")
     echo_result ${result} ${array}
     echo "======================================="
 }
