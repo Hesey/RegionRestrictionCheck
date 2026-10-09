@@ -4547,7 +4547,17 @@ function WebTest_Gemini() {
         echo -n -e "\r Google Gemini:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
         return
     fi
-    result=$(echo "$tmpresult" | grep -q '45631641,null,true' && echo "Yes" || echo "")
+    local result=""
+    local countrycode
+    # Google changed this feature flag from the legacy array representation
+    # `45631641,null,true` to a JSON object (`"45631641":true`). The object
+    # may itself be embedded in another JSON string, in which case the quote
+    # before the colon is escaped. Accept all known representations.
+    if echo "$tmpresult" | grep -qF '45631641,null,true' || \
+        echo "$tmpresult" | grep -qF '"45631641":true' || \
+        echo "$tmpresult" | grep -qF '45631641\":true'; then
+        result="Yes"
+    fi
     countrycode=$(echo "$tmpresult" | grep -o ',2,1,200,"[A-Z]\{3\}"' | sed 's/,2,1,200,"//;s/"//' || echo "")
     if [ -n "$result" ] && [ -n "$countrycode" ]; then
         echo -n -e "\r Google Gemini:\t\t\t\t${Font_Green}Yes (Region: $countrycode)${Font_Suffix}\n"
