@@ -4580,6 +4580,13 @@ function WebTest_Gemini() {
         result="Yes"
     fi
     countrycode=$(echo "$tmpresult" | grep -o ',2,1,200,"[A-Z]\{3\}"' | sed 's/,2,1,200,"//;s/"//' || echo "")
+    # Mainland China is only supported for eligible Workspace accounts, not
+    # the general consumer Gemini web app tested here. The feature flag can
+    # still be true for CHN, so the detected region must take precedence.
+    if [ "$countrycode" == 'CHN' ]; then
+        echo -n -e "\r Google Gemini:\t\t\t\t${Font_Red}No (Region: ${countrycode})${Font_Suffix}\n"
+        return
+    fi
     if [ -n "$result" ] && [ -n "$countrycode" ]; then
         echo -n -e "\r Google Gemini:\t\t\t\t${Font_Green}Yes (Region: $countrycode)${Font_Suffix}\n"
         return
